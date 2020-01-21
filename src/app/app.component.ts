@@ -12,35 +12,51 @@ export class AppComponent implements OnInit {
   galaxies = [];
   galaxyForm: FormGroup;
 
-  constructor(private galaxyService: GalaxyService) {
-  }
+  constructor(private galaxyService: GalaxyService) {}
   ngOnInit() {
-    this.galaxyService.getGalaxies().subscribe((res) => {
+    this.galaxyService.getGalaxies().subscribe(res => {
       this.galaxies = res;
-    })
+    });
     this.createForm();
     this.onFormChanges();
   }
 
   createForm() {
     this.galaxyForm = new FormGroup({
-      galaxy: new FormControl({value: null, disabled: false}, [Validators.required]),
-      rating: new FormControl({value: null, disabled: true}, [Validators.required]),
-      name: new FormControl({value: null, disabled: false}, [Validators.required])
+      galaxy: new FormControl({ value: 2, disabled: false }, [
+        Validators.required
+      ]),
+      rating: new FormControl({ value: null, disabled: true }, [
+        Validators.required
+      ]),
+      name: new FormControl({ value: null, disabled: false }, [
+        Validators.required
+      ])
     });
   }
 
   onFormChanges() {
-    this.galaxyForm.get('galaxy').valueChanges.subscribe((val) => {
-      let ratingControl = this.galaxyForm.get('rating')
-      if(val) {
-        ratingControl.enable();
-      }
-      else {
-        ratingControl.patchValue(null);
-        ratingControl.disable();
-      }
+    const galaxyControl = this.galaxyForm.get('galaxy');
+    const ratingControl = this.galaxyForm.get('rating');
+    // this.galaxyForm.get('galaxy').valueChanges.subscribe(val => {
+    //   if (val) {
+    //     ratingControl.enable();
+    //   } else {
+    //     ratingControl.setValue(null);
+    //     ratingControl.disable();
+    //   }
+    // });
+
+    ratingControl.valueChanges.subscribe(val => {
+      console.log('ratingControl value change', val);
     });
+
+    galaxyControl.valueChanges.subscribe(val => {
+      console.log('galaxyControl value change', val);
+    });
+    galaxyControl.setValue(3);
+
+    // ratingControl.
   }
 
   onSubmit() {
